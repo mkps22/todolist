@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        body{
+            height: 100vh;
+            width: 100%;
+            background-color: rgb(110, 110, 110);
+            font-size: 22px;
+        }
+        #b2 {
+            display: none;
+        }
+        h1{
+            text-align: center;
+        }
+        input{
+            width: 40%;
+            height: 5rem;
+            font-size: 26px;
+            margin-left: 4%;
+        }
+        button{
+            width: 8%;
+            height: 6vh;
+            padding: 5px;
+            font-size: 1rem;
+       
+        
+            background-color: floralwhite;
+        }
+        li{
+            font-size: 28px;
+            margin-left: 5%;
+        }
+        input::placeholder{
+            font-size: 22px;
+            color: darkolivegreen;
+            background-color: beige;
+           height: 4vh;
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1>Hey,,,Manage Your Task List</h1>
+    <input type="text" id="t1" placeholder="Enter Your Task"/>
+    <button onclick="add()" id="b1">Add</button>
+    <button onclick="update()" id="b2">Update</button>
+    <div class="con"></div>
+
+    
+    <script>
+        let tfr = document.getElementById("t1")
+        let conref = document.getElementsByClassName("con")[0]
+        let b1ref = document.getElementById("b1")
+        let b2ref = document.getElementById("b2")
+        let eindex = -1
+        let add = () => {
+            let todo = localStorage.getItem("todo")
+            if (todo == undefined) {
+                todo = []
+                todo.push(tfr.value)
+                localStorage.setItem("todo", JSON.stringify(todo))
+            }
+            else {
+                todo = JSON.parse(todo)
+                todo.push(tfr.value)
+                localStorage.setItem("todo", JSON.stringify(todo))
+            }
+            tfr.value = ""
+            disp()
+        }
+        let disp = () => {
+            let todo = localStorage.getItem("todo")
+            conref.innerHTML = ""
+            if (todo != undefined) {
+                todo = JSON.parse(todo)
+                for (i = 0; i < todo.length; i++) {
+                    let li = document.createElement("li")
+                    li.innerHTML = todo[i] + `<button onclick="edit(${i})">edit</button><button onclick="del(${i})">del</button>`
+                    conref.appendChild(li)
+                }
+            }
+        }
+        disp()
+        let del = (ind) => {
+           
+            let todo = localStorage.getItem("todo")
+            todo = JSON.parse(todo)
+            todo.splice(ind, 1)
+            localStorage.setItem("todo", JSON.stringify(todo))
+            disp()
+        }
+        let edit = (ind) => {
+            let todo = localStorage.getItem("todo")
+
+            todo = JSON.parse(todo)
+            tfr.value = todo[ind]
+            b1ref.style.display = "none"
+            b2ref.style.display = "inline"
+            eindex = ind
+        }
+        let update = () => {
+            let todo = localStorage.getItem("todo")
+            todo = JSON.parse(todo)
+            todo[eindex] = tfr.value
+            localStorage.setItem("todo", JSON.stringify(todo))
+            disp()
+            tfr.value = ""
+            b1ref.style.display = "inline"
+            b2ref.style.display = "none"
+        }
+
+    </script>
+
+</body>
+
+</html>
